@@ -6,6 +6,7 @@ import { watchPublicPlugin, watchRebuildPlugin } from '@extension/hmr';
 import { watchOption } from '@extension/vite-config';
 import env, { IS_DEV, IS_PROD } from '@extension/env';
 import { nodePolyfills } from 'vite-plugin-node-polyfills';
+import { rmSync } from 'node:fs';
 
 const rootDir = resolve(import.meta.dirname);
 const srcDir = resolve(rootDir, 'src');
@@ -30,6 +31,18 @@ export default defineConfig({
     makeManifestPlugin({ outDir }),
     IS_DEV && watchRebuildPlugin({ reload: true, id: 'chrome-extension-hmr' }),
     nodePolyfills(),
+    {
+      name: 'remove-locales',
+      closeBundle() {
+        const localesPath = resolve(__dirname, '..', 'dist', '_locales');
+        try {
+          rmSync(localesPath, { recursive: true, force: true });
+          console.log('_locales directory removed');
+        } catch (e) {
+          console.error('Failed to remove _locales directory', e);
+        }
+      }
+    }
   ],
   publicDir: resolve(rootDir, 'public'),
   build: {

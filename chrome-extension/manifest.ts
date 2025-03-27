@@ -1,6 +1,11 @@
-import { readFileSync } from 'node:fs';
+import type { Manifest } from '@extension/dev-utils/lib/manifest-parser/types';
+import { readFileSync } from 'fs';
 
 const packageJson = JSON.parse(readFileSync('./package.json', 'utf8'));
+const { version } = packageJson;
+
+// Convert version to semver (e.g. 0.1.0-beta6)
+const [major, minor, patch, label = '0'] = version.replace(/[^\d.-]+/g, '').split(/[.-]/);
 
 /**
  * @prop default_locale
@@ -17,59 +22,93 @@ const packageJson = JSON.parse(readFileSync('./package.json', 'utf8'));
  * @prop content_scripts
  * css: ['content.css'], // public folder
  */
-const manifest = {
+const manifest: Manifest = {
+  name: 'Monty Agent',
+  description: 'AI-powered scam detection for online marketplaces',
+  version,
+  version_name: version,
   manifest_version: 3,
-  default_locale: 'en',
-  name: '__MSG_extensionName__',
-  browser_specific_settings: {
-    gecko: {
-      id: 'example@example.com',
-      strict_min_version: '109.0',
+  action: {
+    default_popup: 'popup.html',
+    default_icon: {
+      '16': 'icon-16.png',
+      '32': 'icon-32.png',
+      '48': 'icon-48.png',
+      '128': 'icon-128.png',
     },
   },
-  version: packageJson.version,
-  description: '__MSG_extensionDescription__',
-  host_permissions: ['<all_urls>'],
-  permissions: ['storage', 'scripting', 'tabs', 'notifications', 'sidePanel'],
-  options_page: 'options/index.html',
+  icons: {
+    '16': 'icon-16.png',
+    '32': 'icon-32.png',
+    '48': 'icon-48.png',
+    '128': 'icon-128.png',
+  },
+  permissions: ['activeTab', 'storage', 'scripting', 'tabs'],
+  host_permissions: [
+    'https://ebay.com/*',
+    'https://*.ebay.com/*',
+    'http://ebay.com/*',
+    'http://*.ebay.com/*',
+    'https://facebook.com/marketplace/*',
+    'https://*.facebook.com/marketplace/*',
+    'http://facebook.com/marketplace/*',
+    'http://*.facebook.com/marketplace/*',
+    'https://vinted.com/*',
+    'https://*.vinted.com/*',
+    'http://vinted.com/*',
+    'http://*.vinted.com/*',
+  ],
   background: {
     service_worker: 'background.js',
     type: 'module',
   },
-  action: {
-    default_popup: 'popup/index.html',
-    default_icon: 'icon-34.png',
-  },
-  chrome_url_overrides: {
-    newtab: 'new-tab/index.html',
-  },
-  icons: {
-    128: 'icon-128.png',
-  },
   content_scripts: [
     {
-      matches: ['http://*/*', 'https://*/*', '<all_urls>'],
+      matches: [
+        'https://ebay.com/*',
+        'https://*.ebay.com/*',
+        'http://ebay.com/*',
+        'http://*.ebay.com/*',
+        'https://facebook.com/marketplace/*',
+        'https://*.facebook.com/marketplace/*',
+        'http://facebook.com/marketplace/*',
+        'http://*.facebook.com/marketplace/*',
+        'https://vinted.com/*',
+        'https://*.vinted.com/*',
+        'http://vinted.com/*',
+        'http://*.vinted.com/*',
+      ],
       js: ['content/index.iife.js'],
     },
-    {
-      matches: ['http://*/*', 'https://*/*', '<all_urls>'],
-      js: ['content-ui/index.iife.js'],
-    },
-    {
-      matches: ['http://*/*', 'https://*/*', '<all_urls>'],
-      css: ['content.css'],
-    },
   ],
-  devtools_page: 'devtools/index.html',
   web_accessible_resources: [
     {
-      resources: ['*.js', '*.css', '*.svg', 'icon-128.png', 'icon-34.png'],
-      matches: ['*://*/*'],
+      resources: ['content-ui/*'],
+      matches: [
+        'https://ebay.com/*',
+        'https://*.ebay.com/*',
+        'http://ebay.com/*',
+        'http://*.ebay.com/*',
+        'https://facebook.com/marketplace/*',
+        'https://*.facebook.com/marketplace/*',
+        'http://facebook.com/marketplace/*',
+        'http://*.facebook.com/marketplace/*',
+        'https://vinted.com/*',
+        'https://*.vinted.com/*',
+        'http://vinted.com/*',
+        'http://*.vinted.com/*',
+      ],
     },
   ],
-  side_panel: {
-    default_path: 'side-panel/index.html',
+  commands: {
+    'scan-listing': {
+      suggested_key: {
+        default: 'Ctrl+Shift+S',
+        mac: 'Command+Shift+S',
+      },
+      description: 'Scan current listing for scams',
+    },
   },
-} satisfies chrome.runtime.ManifestV3;
+} satisfies Manifest;
 
 export default manifest;

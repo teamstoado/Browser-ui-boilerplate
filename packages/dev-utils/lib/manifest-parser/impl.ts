@@ -6,7 +6,27 @@ export const ManifestParserImpl: ManifestParserInterface = {
       manifest = convertToFirefoxCompatibleManifest(manifest);
     }
 
-    return JSON.stringify(manifest, null, 2);
+    // Remove localization if default_locale is not present
+    const manifestCopy = { ...manifest };
+    if (!manifestCopy.default_locale) {
+      delete manifestCopy.default_locale;
+      if (manifestCopy.name?.startsWith('__MSG_')) {
+        manifestCopy.name = manifestCopy.name.replace(/__MSG_(\w+)__/g, (substring: string) => {
+          const key = substring.replace(/__MSG_|__/g, '');
+          return key === 'appName' ? 'Monty Agent' : manifestCopy.name || '';
+        });
+      }
+      if (manifestCopy.description?.startsWith('__MSG_')) {
+        manifestCopy.description = manifestCopy.description.replace(/__MSG_(\w+)__/g, (substring: string) => {
+          const key = substring.replace(/__MSG_|__/g, '');
+          return key === 'appDescription'
+            ? 'AI-powered scam detection for online marketplaces'
+            : manifestCopy.description || '';
+        });
+      }
+    }
+
+    return JSON.stringify(manifestCopy, null, 2);
   },
 };
 

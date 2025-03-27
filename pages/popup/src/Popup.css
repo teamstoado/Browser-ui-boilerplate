@@ -1,3 +1,6 @@
+/* Import Azaret Mono font */
+@import url('https://fonts.googleapis.com/css2?family=Azeret+Mono:wght@400;500;600;700&display=swap');
+
 .App {
   position: absolute;
   top: 0;
@@ -27,4 +30,61 @@ code {
   background: rgba(148, 163, 184, 0.5);
   border-radius: 0.25rem;
   padding: 0.2rem 0.5rem;
+}
+
+/* Popup Styles */
+.popup-container {
+  width: 960px;
+  min-height: 800px;
+  background: white;
+  font-family: 'Azeret Mono', monospace;
+}
+
+/* Animations */
+@keyframes pulse {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.05); }
+  100% { transform: scale(1); }
+}
+
+.pulse {
+  animation: pulse 2s infinite;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* Transitions */
+.fade-enter {
+  opacity: 0;
+}
+
+.fade-enter-active {
+  opacity: 1;
+  transition: opacity 200ms ease-in;
+}
+
+.fade-exit {
+  opacity: 1;
+}
+
+.fade-exit-active {
+  opacity: 0;
+  transition: opacity 200ms ease-in;
 }

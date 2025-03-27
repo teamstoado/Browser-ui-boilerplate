@@ -1,0 +1,13 @@
+<svg width="128" height="128" viewBox="0 0 128 128" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Shield background -->
+  <path d="M64 8L16 32V56C16 82.5097 36.4903 106.51 64 112C91.5097 106.51 112 82.5097 112 56V32L64 8Z" fill="#E0E0E0"/>
+  
+  <!-- Shield border -->
+  <path d="M64 12L20 34V56C20 80.3009 38.6991 102.301 64 108C89.3009 102.301 108 80.3009 108 56V34L64 12Z" fill="white"/>
+  
+  <!-- Monty "M" logo -->
+  <path d="M44 44V84H52V60L64 76L76 60V84H84V44H76L64 60L52 44H44Z" fill="#000000"/>
+  
+  <!-- Shield outline -->
+  <path d="M64 8L16 32V56C16 82.5097 36.4903 106.51 64 112C91.5097 106.51 112 82.5097 112 56V32L64 8Z" stroke="#000000" stroke-width="2" fill="none"/>
+</svg> 
